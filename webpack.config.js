@@ -14,6 +14,7 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
+            babelrc: true,
             presets: ['@babel/preset-react'],
             plugins: [
               ["@babel/plugin-proposal-decorators", { "legacy": true }],
@@ -22,7 +23,7 @@ module.exports = {
         }
       },
       {
-        test: /\.css$/,
+        test: /\.(sc|c)ss$/,
         use: ['style-loader', 'css-loader']
       }
     ]
