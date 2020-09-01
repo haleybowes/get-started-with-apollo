@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
-import { CardTitle, CardSubtitle, CardText, Button, CardBody, Media } from 'reactstrap';
-import { gql } from 'apollo-boost';
-import { Query } from 'react-apollo';
-import './styles.css';
+import React, { useState } from "react";
+import { useQuery, gql } from "@apollo/client";
+import styled from "styled-components";
+
+import Product from "./Product";
+import Nav from "./Nav";
 
 const GET_PRODUCTS = gql`
   {
@@ -22,59 +23,136 @@ const GET_PRODUCTS = gql`
   }
 `;
 
-const withProducts = Component => props => {
+const GET_PRODUCT = gql`
+  {
+    products {
+      id
+      name
+      price
+      description
+      color
+      size
+      image
+    }
+  }
+`;
+
+const FIND_PRODUCT = gql`
+  query getProduct($size: String) {
+    getProduct(size: $size) {
+      id
+      name
+      price
+      description
+      color
+      size
+      image
+    }
+  }
+`;
+
+const GET_MERCHANT = gql`
+  query getMerchant($merchant: String) {
+    getMerchant(merchant: $merchant) {
+      guid
+      merchant
+      products {
+        id
+        name
+        price
+        description
+        color
+        size
+        image
+      }
+    }
+  }
+`;
+
+const Products = styled.section`
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 90%;
+  margin: 50px auto;
+`;
+
+const Loading = styled.section`
+  text-align: center;
+
+  h3 {
+    font-size: 2rem;
+    margin: 100px auto;
+  }
+`;
+
+const ProductsPage = styled.section``;
+
+const ProductsList = () => {
+  const { loading, error, data } = useQuery(GET_PRODUCTS);
+  const hey = useQuery(GET_PRODUCT);
+  const merchantQuery = useQuery(GET_MERCHANT, {
+    variables: { merchant: "CORPULSE" },
+  });
+  const findProduct = useQuery(FIND_PRODUCT, {
+    variables: { size: "S" },
+  });
+
+  const getProduct = useQuery(GET_PRODUCT, {
+    variables: { size: "S" },
+  });
+
+  const sortProducts = (type, merchants) => {
+    const products = merchants.reduce(
+      (acc, curr) => acc.concat(curr.products),
+      []
+    );
+
+    switch (type) {
+      case "lowHigh":
+        return products.sort((a, b) => a.price - b.price);
+      case "highLow":
+        return products.sort((a, b) => b.price - a.price);
+      default:
+        return products;
+    }
+  };
+
+  if (loading) {
+    return (
+      <Loading>
+        <h3>Loading...</h3>
+      </Loading>
+    );
+  }
+
+  if (error || !data?.merchants || data?.merchants?.length <= 0) {
+    return (
+      <Loading>
+        <h3>No products available</h3>
+      </Loading>
+    );
+  }
+
+  const merchantList = data.merchants
+    .reduce((acc, curr) => {
+      return acc.concat(curr.merchant);
+    }, [])
+    .sort();
+
   return (
-    <Query query={GET_PRODUCTS}>
-      {({ loading, data }) => {
-        return (
-          <Component merchantsLoading={loading} merchants={data && data.merchants} {...props} />
-        );
-      }}
-    </Query>
+    <ProductsPage>
+      <Nav>
+        <button onClick={() => getProduct()}>Click me!</button>
+      </Nav>
+      <Products>
+        {data.merchants.map((merchant) => {
+          return merchant.products.map((product) => (
+            <Product key={product.id} product={product} />
+          ));
+        })}
+      </Products>
+    </ProductsPage>
   );
 };
 
-class ProductsList extends Component {
-  
-    showProducts() {
-      const { merchants, merchantsLoading } = this.props;
-  
-      if (!merchantsLoading && merchants && merchants.length > 0) {
-        return merchants.map(({products}) => {
-          return products && products.length > 0 && products.map(product => {
-            const { color, description, image, name, price, size } = product
-            return (
-              <Media key={product.id} className="product-card">
-              <Media left href="#">
-                <Media object src={image} alt="Product image cap" />
-                </Media>
-                <CardBody>
-                  <CardTitle style={{fontWeight: 600}}>{name}</CardTitle>
-                  <CardTitle>Price: {price}</CardTitle>
-                  <CardSubtitle>Color: {color}</CardSubtitle>
-                  <CardSubtitle>Size: {size}</CardSubtitle>
-                  <CardText>Details: {description}</CardText>
-                  <Button color="primary" size="lg" block>Buy</Button>
-                </CardBody>
-              </Media>
-            );
-          })
-        });
-      } else {
-        return (
-          <div>
-            <h3>No products available</h3>
-          </div>
-        );
-      }
-    }
-  
-    render() {
-      return (
-        <div>
-          {this.showProducts()}
-        </div>
-      );
-    }
-  }
-  export default withProducts(ProductsList)
+export default ProductsList;

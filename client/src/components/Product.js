@@ -7,7 +7,15 @@ import {
   CardBody,
   Media,
 } from "reactstrap";
-import { useQuery, gql, useMutation, InMemoryCache, makeVar, useApolloClient } from "@apollo/client";
+import {
+  useQuery,
+  gql,
+  useMutation,
+  InMemoryCache,
+  makeVar,
+  useApolloClient,
+} from "@apollo/client";
+import styled from 'styled-components';
 
 export const cartItemsVar = makeVar([]);
 
@@ -30,11 +38,11 @@ export const cache = new InMemoryCache({
         users: {
           read() {
             return cartItemsVar();
-          }
-        }
-      }
-    }
-  }
+          },
+        },
+      },
+    },
+  },
 });
 
 // const cache = new InMemoryCache({
@@ -94,33 +102,52 @@ const Dog = ({ breed }) => {
     onCompleted({ login }) {
       localStorage.setItem("token", login);
       client.writeData({ data: { isLoggedIn: true } });
-    }
+    },
   });
 
   return (
     <div>
       <h1>hi!</h1>
-      <button onClick={() => cartItemsVar([...cartItems, "Rebecca"])}>
+      {/* <button onClick={() => cartItemsVar([...cartItems, "Rebecca"])}>
         Add to Cart
-      </button>
-      {/* <button onClick={() => addUser({ variables: { name: "Rebecca" } })}>
-        Click me!
       </button> */}
+      <button onClick={() => addUser({ variables: { name: "Rebecca" } })}>
+        Click me!
+      </button>
     </div>
   );
 };
+
+const ProductCard = styled(Media)`
+  flex-basis: calc(100% / 2 - 30px);
+  margin: 30px auto;
+  cursor: pointer;
+  color: grey;
+  box-shadow: 0px 8px 10px rgba(158, 147, 166, 0.14), 0px 3px 14px rgba(158, 147, 166, 0.12), 0px 4px 5px rgba(158, 147, 166, 0.2);
+  display: flex;
+  border-radius: 6px;
+  overflow: hidden;
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+  }
+
+  .card-title {
+    font-weight: 600;
+  }
+`;
 
 const Product = ({ product }) => {
   const [clickButton, setClickButton] = useState(false);
   const { color, description, image, name, price, size } = product;
 
   return (
-    <Media className="product-card">
+    <ProductCard>
       <Media left href="#">
         <Media object src={image} alt="Product image cap" />
       </Media>
       <CardBody>
-        <CardTitle style={{ fontWeight: 600 }}>{name}</CardTitle>
+        <CardTitle>{name}</CardTitle>
         <CardTitle>Price: {price}</CardTitle>
         <CardSubtitle>Color: {color}</CardSubtitle>
         <CardSubtitle>Size: {size}</CardSubtitle>
@@ -135,7 +162,7 @@ const Product = ({ product }) => {
         </Button>
         {clickButton && <Dog breed="Corgi" />}
       </CardBody>
-    </Media>
+    </ProductCard>
   );
 };
 
