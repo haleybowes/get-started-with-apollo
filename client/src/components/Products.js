@@ -149,7 +149,9 @@ const ProductsList = () => {
   const [selectedSize, setSelectedSize] = useState("");
 
   useEffect(() => {
+    // we only want product list to be set initially if the data has been successfully fetched and the product list has not been modified due to other queries
     if (!productList?.length && data?.merchants) {
+      // we only want to allow the user to filter by merchant given the merchant has associated products
       const merchants = data?.merchants
         ?.reduce((acc, curr) => {
           if (curr.products.length > 0) {
@@ -163,6 +165,7 @@ const ProductsList = () => {
     }
   }, [productList, !!data?.merchants]);
 
+  // this function reduces the list of merchants to their products and allows the user to sort based on price
   const sortProducts = (type) => {
     const products = data.merchants.reduce(
       (acc, curr) => acc.concat(curr.products),
@@ -219,6 +222,7 @@ const ProductsList = () => {
                 <select
                   value={selectedSize}
                   onChange={async (e) => {
+                    // query to allow the user to filter the products by size
                     const { data } = await client.query({
                       query: GET_PRODUCT,
                       variables: { size: e.target.value },
@@ -243,6 +247,7 @@ const ProductsList = () => {
                 <select
                   value={selectedMerchant}
                   onChange={async (e) => {
+                    // query to allow the user to filter the products by merchant
                     const { data } = await client.query({
                       query: GET_MERCHANT,
                       variables: { merchant: e.target.value },
@@ -263,6 +268,7 @@ const ProductsList = () => {
         </ApolloConsumer>
       </Header>
       <Products>
+        {/* taking into account for when we are either returning an array of products or an array of merchants */}
         {productList?.map((merchant) => {
           if (!merchant) {
             return null;
