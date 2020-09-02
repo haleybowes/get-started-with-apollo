@@ -9,7 +9,7 @@ const resolvers = {
     getProduct(parent, args, context, info) {
       return merchants
         .reduce((acc, curr) => acc.concat(curr.products), [])
-        .filter((sup) => sup.size === args.size);
+        .filter((merchant) => merchant.size === args.size);
     },
   },
 };
