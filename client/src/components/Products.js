@@ -54,7 +54,12 @@ const GET_MERCHANT = gql`
   }
 `;
 
-const Header = styled.section``;
+const Header = styled.section`
+  display: flex;
+  max-width: 80%;
+  margin: 30px auto 0;
+  justify-content: space-around;
+`;
 
 const Products = styled.section`
   display: flex;
@@ -72,7 +77,51 @@ const Loading = styled.section`
   }
 `;
 
-const ProductsPage = styled.section``;
+const Button = styled.button`
+  border-radius: 20px;
+  transition: all 300ms ease-in-out;
+  box-shadow: 0px 8px 10px rgba(158, 147, 166, 0.14),
+    0px 3px 14px rgba(158, 147, 166, 0.12), 0px 4px 5px rgba(158, 147, 166, 0.2);
+  background: white;
+  border: 1px solid gray;
+  padding: 5px 20px;
+  margin: 0 5px;
+  color: dimgray;
+
+  &:hover {
+    box-shadow: 0px 16px 24px rgba(158, 147, 166, 0.14),
+      0px 6px 30px rgba(158, 147, 166, 0.12),
+      0px 8px 10px rgba(158, 147, 166, 0.3);
+  }
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+
+  select {
+    border-radius: 20px;
+    width: 100%;
+    background: white;
+    border: 1px solid gray;
+    padding: 5px 20px;
+    color: dimgray;
+  }
+`;
+
+const PriceSort = styled.div`
+  div {
+    display: flex;
+  }
+`;
+
+const ProductsPage = styled.section`
+  color: grey;
+
+  p {
+    text-align: center;
+  }
+`;
 
 const ProductsList = () => {
   const { loading, error, data } = useQuery(GET_PRODUCTS);
@@ -136,14 +185,18 @@ const ProductsList = () => {
   return (
     <ProductsPage>
       <Header>
-        Sort by Price
-        <button onClick={() => sortProducts("highLow")}>High to Low</button>
-        <button onClick={() => sortProducts("lowHigh")}>Low to High</button>
+        <PriceSort>
+          <p>Sort by Price</p>
+          <div>
+            <Button onClick={() => sortProducts("highLow")}>High to Low</Button>
+            <Button onClick={() => sortProducts("lowHigh")}>Low to High</Button>
+          </div>
+        </PriceSort>
         <ApolloConsumer>
           {(client) => (
-            <form>
+            <Form>
               <label>
-                Get products by size
+                <p>Get products by size</p>
                 <select
                   value={selectedSize}
                   onChange={async (e) => {
@@ -152,7 +205,7 @@ const ProductsList = () => {
                       variables: { size: e.target.value },
                     });
                     setProductList(data.getProduct);
-                    setSelectedSize(data.getProduct[0].size)
+                    setSelectedSize(data.getProduct[0].size);
                   }}
                 >
                   <option value="S">S</option>
@@ -160,14 +213,14 @@ const ProductsList = () => {
                   <option value="L">L</option>
                 </select>
               </label>
-            </form>
+            </Form>
           )}
         </ApolloConsumer>
         <ApolloConsumer>
           {(client) => (
-            <form>
+            <Form>
               <label>
-                Filter by merchant
+                <p>Filter by merchant</p>
                 <select
                   value={selectedMerchant}
                   onChange={async (e) => {
@@ -186,7 +239,7 @@ const ProductsList = () => {
                   ))}
                 </select>
               </label>
-            </form>
+            </Form>
           )}
         </ApolloConsumer>
       </Header>
