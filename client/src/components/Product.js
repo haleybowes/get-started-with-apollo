@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   CardTitle,
   CardSubtitle,
@@ -32,7 +32,6 @@ const ProductCard = styled(Media)`
 
 const Product = ({ product }) => {
   let history = useHistory();
-  const [clickButton, setClickButton] = useState(false);
   const { color, description, image, name, price, size } = product;
 
   return (

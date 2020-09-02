@@ -59,6 +59,17 @@ const Header = styled.section`
   max-width: 80%;
   margin: 30px auto 0;
   justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+
+
+  & > * {
+    flex-basis: 100%;
+
+    @media (min-width: 768px) {
+      flex-basis: 40%;
+    }
+  }
 `;
 
 const Products = styled.section`
@@ -112,6 +123,13 @@ const Form = styled.form`
 const PriceSort = styled.div`
   div {
     display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+
+    & > * {
+      flex-grow: 1;
+      margin-bottom: 15px;
+    }
   }
 `;
 
@@ -185,8 +203,9 @@ const ProductsList = () => {
   return (
     <ProductsPage>
       <Header>
+        <Button onClick={sortProducts}>Clear Filters</Button>
         <PriceSort>
-          <p>Sort by Price</p>
+          <p>Sort products by price</p>
           <div>
             <Button onClick={() => sortProducts("highLow")}>High to Low</Button>
             <Button onClick={() => sortProducts("lowHigh")}>Low to High</Button>
@@ -196,7 +215,7 @@ const ProductsList = () => {
           {(client) => (
             <Form>
               <label>
-                <p>Get products by size</p>
+                <p>Filter products by size</p>
                 <select
                   value={selectedSize}
                   onChange={async (e) => {
