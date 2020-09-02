@@ -3,15 +3,15 @@ import ReactDOM from "react-dom";
 import { Route, BrowserRouter as Router } from "react-router-dom";
 
 import App from "./App";
-import Product from './components/Product';
+import Check from "./components/Check";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const routing = (
   <Router>
     <div>
-      <Route path="/" component={App} />
-      {/* <Route path="/hey" component={Profile} /> */}
+      <Route exact path="/" component={App} />
+      <Route exact path="/check-check" component={Check} />
     </div>
   </Router>
 );

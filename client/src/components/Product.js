@@ -8,6 +8,7 @@ import {
   Media,
 } from "reactstrap";
 import styled from "styled-components";
+import { useHistory } from "react-router-dom";
 
 const ProductCard = styled(Media)`
   flex-basis: calc(100% / 2 - 30px);
@@ -30,6 +31,7 @@ const ProductCard = styled(Media)`
 `;
 
 const Product = ({ product }) => {
+  let history = useHistory();
   const [clickButton, setClickButton] = useState(false);
   const { color, description, image, name, price, size } = product;
 
@@ -48,7 +50,7 @@ const Product = ({ product }) => {
           color="primary"
           size="lg"
           block
-          onClick={() => setClickButton(!clickButton)}
+          onClick={() => history.push("/check-check")}
         >
           Buy
         </Button>
