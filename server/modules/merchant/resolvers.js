@@ -6,9 +6,10 @@ const resolvers = {
       return merchants.find((merch) => merch.merchant === args.merchant);
     },
     merchants: () => merchants,
-    products: () => merchants.reduce((acc, curr) => acc.concat(curr.products), []),
     getProduct(parent, args, context, info) {
-      return merchants.reduce((acc, curr) => acc.concat(curr.products),[]).filter(sup => sup.size === args.size);
+      return merchants
+        .reduce((acc, curr) => acc.concat(curr.products), [])
+        .filter((sup) => sup.size === args.size);
     },
   },
 };

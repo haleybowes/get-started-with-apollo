@@ -39,7 +39,6 @@ const typeDefs = gql`
     merchants: [Merchant!]!
     getMerchant(merchant: String): Merchant
     getProduct(size: String): [Product!]!
-    products: [Product!]!
   }
 
   type Mutation {
