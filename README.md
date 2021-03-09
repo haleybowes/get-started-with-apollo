@@ -1,4 +1,4 @@
-# Apollo Graph QL Tutorial
+# Apollo GraphQL Tutorial
 
 ## Install
 1. Ensure `yarn` is installed
